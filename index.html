@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" sizes="128x128" href="android-chrome-512x512.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JM Veículos</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .navbar {
+            background: url('https://www.textures4photoshop.com/tex/thumbs/rubber-car-tire-texture-seamless-free-1027.jpg') repeat;
+            background-size: cover; /* Adjust as needed */
+            background-position: center; /* Adjust as needed */
+        }
+        /* Styles for the carousel container */
+        .carousel-container {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh; /* Adjust to take the full height of the viewport */
+            overflow: hidden;
+            z-index: -1; /* Place the carousel behind other content */
+        }
+
+        /* Individual image styles */
+        .carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+
+        /* Show the first image by default */
+        .carousel-image:nth-child(1) {
+            opacity: 1;
+        }
+    </style>
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/JM_webpage/assets/img/Marca.png" alt="JM Veículos" width="150">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-warning mx-2" data-toggle="modal" data-target="#editarVehicleModal">Editar Veículos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-success mx-2" data-toggle="modal" data-target="#listarVeiculosModal">Listar Veículos</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-primary mx-2" data-toggle="modal" data-target="#addVehicleModal">Adicionar Veículo</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-danger mx-2" data-toggle="modal" data-target="#excluirVehicleModal">Excluir Veículo</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-info mx-2" data-toggle="modal" data-target="#newsletterModal">Inscreva-se</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+         <!-- Carousel container -->
+    <div class="carousel-container">
+        <!-- Image 1 -->
+        <img class="carousel-image" src="https://i0.wp.com/picjumbo.com/wp-content/uploads/european-highway-surrounded-by-fields.jpg?w=2210&quality=70" alt="Image 1">
+        <!-- Image 2 -->
+        <img class="carousel-image" src="https://i0.wp.com/picjumbo.com/wp-content/uploads/european-truck-on-the-road-free-photo.jpg?w=2210&quality=70" alt="Image 2">
+
+        <img class="carousel-image" src="https://i0.wp.com/picjumbo.com/wp-content/uploads/luxury-cars-and-tourists-in-front-of-monaco-casino-free-photo.jpg?w=2210&quality=70" alt="Image 3">
+
+        <img class="carousel-image" src="https://i0.wp.com/picjumbo.com/wp-content/uploads/two-level-interchange-roads-with-tunnels.jpg?w=2210&quality=70" alt="Image 4">
+    </div>
+    <script>
+        // JavaScript to handle image carousel
+        const images = document.querySelectorAll(".carousel-image");
+        let currentIndex = 0;
+
+        function showImage(index) {
+            // Hide all images
+            images.forEach((image) => {
+                image.style.opacity = 0;
+            });
+
+            // Show the specified image
+            images[index].style.opacity = 1;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        }
+
+        // Start the carousel
+        showImage(currentIndex);
+        setInterval(nextImage, 5000); // Change image every 5 seconds
+    </script>
+          <!-- Listar Veículos Modal -->
+    <div class="modal fade" id="listarVeiculosModal" tabindex="-1" role="dialog" aria-labelledby="listarVeiculosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content custom-modal">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="listarVeiculosModalLabel">Lista de Veículos</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <!-- Div to list vehicles -->
+                    <div id="veiculos-lista">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Cor</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Ano de Fabricação</th>
+                                <th>Estado</th>
+                                <th>Km Rodados</th>
+                                <th>Passagem por Leilão</th>
+                                <th>Formas de Pagamento</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for veiculo in veiculos %}
+                                <tr>
+                                    <td>{{ veiculo.id }}</td>
+                                    <td>{{ veiculo.tipo }}</td>
+                                    <td>{{ veiculo.cor }}</td>
+                                    <td>{{ veiculo.marca }}</td>
+                                    <td>{{ veiculo.modelo }}</td>
+                                    <td>{{ veiculo.ano_fabricacao }}</td>
+                                    <td>{{ veiculo.estado }}</td>
+                                    <td>{{ veiculo.km_rodados }}</td>
+                                    <td>{{ veiculo.leilao }}</td>
+                                    <td>{{ veiculo.formas_pagamento }}</td>
+                                    <td>
+                                        <!-- <a href="/veiculos/excluir/{{ veiculo.id }}">Excluir</a>
+                                        // <a href="/veiculos/editar/{{ veiculo.id }}">Editar</a>-->
+                                        <a href="/excluir_veiculo/{{ veiculo[0] }}" class="btn btn-danger">Excluir</a>
+                                        <a href="/editar_veiculo/{{ veiculo[0] }}" class="btn btn-primary">Editar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Customize modal background and texture (sepia) */
+    .custom-modal {
+        background-color: #dfdfdf; /* Sepia background color */
+        background-image: url('path/to/texture-image.jpg'); /* Replace with your texture image path */
+        background-blend-mode: multiply; /* Blend mode for texture */
+        color: #fff; /* Text color */
+    }
+
+    /* Customize modal body */
+    .custom-modal-body {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+</style>
+        <!-- Edite o Modal do Veículo -->
+<div class="modal fade" id="editarVehicleModal" tabindex="-1" role="dialog" aria-labelledby="editarVehicleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="editarVehicleModalLabel">Editar Veículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/veiculos/editar" method="POST" id="editar-form">
+                    <div class="form-group">
+                        <label for="veiculo_id">ID do Veículo:</label>
+                        <input type="number" name="veiculo_id" id="veiculo_id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_editar">Tipo:</label>
+                        <select name="tipo" id="tipo_editar" class="form-control">
+                            <option value="carro">Carro</option>
+                            <option value="moto">Moto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cor_editar">Cor:</label>
+                        <input type="text" name="cor" id="cor_editar" class="form-control">
+                    </div>
+                    <!-- Adicione campos semelhantes para outros atributos de veículos com seus valores -->
+                    <div class="form-group">
+                        <label for="marca_editar">Marca:</label>
+                        <input type="text" name="marca" id="marca_editar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="modelo_editar">Modelo:</label>
+                        <input type="text" name="modelo" id="modelo_editar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="ano_fabricacao_editar">Ano de Fabricação:</label>
+                        <input type="number" name="ano_fabricacao" id="ano_fabricacao_editar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado_editar">Estado:</label>
+                        <select name="estado" id="estado_editar" class="form-control">
+                            <option value="novo">Novo</option>
+                            <option value="usado">Usado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="km_rodados_editar">Km Rodados:</label>
+                        <input type="number" name="km_rodados" id="km_rodados_editar" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="passagem_leilao_editar">Passagem por Leilão:</label>
+                        <input type="checkbox" name="passagem_leilao" id="passagem_leilao_editar">
+                    </div>
+                    <div class="form-group">
+                        <label for="formas_pagamento_editar">Formas de Pagamento:</label>
+                        <input type="text" name="formas_pagamento" id="formas_pagamento_editar" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function refreshVehicleList() {
+        $.get('/veiculos', function(data) {
+            $('#vehicle-list').html(data);
+        });
+    }
+</script>
+        <!-- Add Vehicle Modal -->
+        <div class="modal fade" id="addVehicleModal" tabindex="-1" role="dialog" aria-labelledby="addVehicleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="addVehicleModalLabel">Adicione um registro</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/veiculos" method="POST" id="adicionar-form">
+                            <!-- Your form fields here -->
+                            <div class="form-group">
+                                <label for="tipo">Tipo:</label>
+                                <select name="tipo" id="tipo" class="form-control">
+                                    <option value="carro">Carro</option>
+                                    <option value="moto">Moto</option>
+                                </select>
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="cor">Cor:</label>
+                                <input type="text" name="cor" id="cor" class="form-control">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="marca">Marca:</label>
+                                <input type="text" name="marca" id="marca" class="form-control">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="modelo">Modelo:</label>
+                                <input type="text" name="modelo" id="modelo" class="form-control">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="ano-fabricacao">Ano de Fabricação:</label>
+                                <input type="number" name="ano_fabricacao" id="ano-fabricacao" class="form-control">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="estado">Estado:</label>
+                                <select name="estado" id="estado" class="form-control">
+                                    <option value="novo">Novo</option>
+                                    <option value="usado">Usado</option>
+                                </select>
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="km-rodados">Km Rodados:</label>
+                                <input type="number" name="km_rodados" id="km-rodados" class="form-control">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="leilao">Passagem por Leilão:</label>
+                                <input type="checkbox" name="leilao" id="leilao">
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="formas-pagamento">Formas de Pagamento:</label>
+                                <input type="text" name="formas_pagamento" id="formas-pagamento" class="form-control">
+                            </div>
+                    
+                            <button type="submit" class="btn btn-primary">Adicionar Veículo</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ <!-- Newsletter Subscription Modal -->
+ <div class="modal fade" id="newsletterModal" tabindex="-1" role="dialog" aria-labelledby="newsletterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="newsletterModalLabel">Se inscreva no nosso portal de notícias!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Fique atualizado com nossas últimas novidades e ofertas assinando nossa newsletter.</p>
+                <form>
+                    <div class="form-group">
+                        <label for="email">seu melhor email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Subscribe</button>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Excluir Vehicle Modal -->
+        <div class="modal fade" id="excluirVehicleModal" tabindex="-1" role="dialog" aria-labelledby="excluirVehicleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="excluirVehicleModalLabel">Excluir Veículo</h5>
+                        
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <h6> Tem certeza? essa ação não pode ser desfeita!</h6>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/veiculos/excluir" method="POST" id="excluir-form">
+                            <div class="form-group">
+                                <label for="id-excluir">Informe o ID do Veículo:</label>
+                                <input type="number" name="id_excluir" id="id-excluir" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="/static/scripts.js"></script>
+    <script>
+        function refreshVehicleList() {
+            $.get('/veiculos', function(data) {
+                $('#vehicle-list').html(data);
+            });
+        }
+    </script>
+</body>
+</html>
