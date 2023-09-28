@@ -1,0 +1,103 @@
+/* Estilo para o cabeçalho (h1) */
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Estilo para o formulário de adição de veículo */
+form {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Estilo para os rótulos do formulário */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Estilo para os campos de entrada de texto */
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Estilo para o botão de adicionar veículo */
+button[type="submit"] {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Estilo para o botão de adicionar veículo (Bootstrap primary color) */
+button[type="submit"].btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Estilo para a tabela de listagem de veículos */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+/* Estilo para as células da tabela */
+table,
+th,
+td {
+  border: 1px solid #ccc;
+}
+
+/* Estilo para o cabeçalho da tabela */
+thead {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Estilo para as células da tabela (dados dos veículos) */
+tbody td {
+  padding: 8px;
+  text-align: center;
+}
+
+/* Estilo para os links de ação (Editar e Excluir) */
+table a {
+  color: #007bff;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+/* Estilo para o rodapé */
+footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #888;
+}
+/* Styles for all modals */
+.modal {
+  background-color: #f5e0b4; /* Sepia background color */
+  color: #fff; /* Text color */
+}
+
+.modal-dialog {
+  max-width: 80%; /* Adjust the maximum width as needed */
+}
+
+.modal-content {
+  background-blend-mode: multiply; /* Blend mode for texture */
+}
+
+.modal-body {
+  max-height: 80vh;
+  overflow-y: auto;
+}
